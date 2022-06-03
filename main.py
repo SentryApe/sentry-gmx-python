@@ -18,8 +18,10 @@ def gmxLong():
     print('Token {0} {1} {2} {3}'.format(data["pair"], data["action"], data["price"], data["quantity"]))
     if data['action'] == "buy":
         if data["pair"] == "ETHUSD":
+            #coin margined assumed
             gmx.limitLong("eth", default_eth_collateral, default_leverage,  float(data["quantity"])/default_leverage, data["price"])
         elif data["pair"] == "BTCUSD":
+            #coin margined assumed 
             gmx.limitLong("btc", default_btc_collateral, default_leverage,  float(data["quantity"])/default_leverage, data["price"])
     elif data['action'] == "sell":
         #close long
@@ -31,9 +33,11 @@ def gmxShort():
     print('Token {0} {1} {2} {3}'.format(data["pair"], data["action"], data["price"], data["quantity"]))
     if data['action'] == "sell":
         if data["pair"] == "ETHUSD":
-            gmx.limitShort("eth", default_stablecoin, default_leverage, float(data["quantity"])/float(data["price"])/default_leverage, data["price"])
+            #stable denominated
+            gmx.limitShort("eth", default_stablecoin, default_leverage, float(data["quantity"])*float(data["price"])/default_leverage, data["price"])
         elif data["pair"] == "BTCUSD":
-            gmx.limitShort("btc", default_stablecoin, default_leverage, float(data["quantity"])/float(data["price"])/default_leverage, data["price"])
+            #stable denominated
+            gmx.limitShort("btc", default_stablecoin, default_leverage, float(data["quantity"])*float(data["price"])/default_leverage, data["price"])
     elif data['action'] == "buy":
         #close short
     return data
