@@ -134,7 +134,7 @@ def long_collateral_path(coin, collateral):
 #works for for same coin or stable collateral longs of btc and eth
 
 def marketLong(coin, collateral, leverage, amount_in, price, slippage):
-    print("longboi")
+    print("Longboi")
     nonce = arbiw3.eth.get_transaction_count(account.address)
     path = long_collateral_path(coin, collateral)
     execution_price = Web3.toWei(str(price * (1.0 + slippage / 100.0)), "tether")
@@ -203,10 +203,10 @@ def marketShort(coin, collateral, leverage, amount_in, price, slippage):
         send_tx(private_key, gmx_position_router, shortboi)
 
 
-#TODO Limit Long
+# Limit Long
 
 def limitLong(coin, collateral, leverage, amount_in, price):
-    print("longboi")
+    print("Longboi")
     nonce = arbiw3.eth.get_transaction_count(account.address)
     path = long_collateral_path(coin, collateral)
     execution_price = Web3.toWei(str(price), "tether")
@@ -250,11 +250,40 @@ def limitLong(coin, collateral, leverage, amount_in, price):
         triggerAboveThreshold = False
         shouldWrap = False
         print(path, ", ",index_token, ", ",   ",", min_out, ", ", size_delta, ", ", is_long, ", ", execution_price, ", ", )
-        longboi = orderbook_contract.functions.createIncreaseOrder(path, amountIn, index_token,  min_out,  size_delta, index_token,  is_long, execution_price, triggerAboveThreshold,executionFee,    shouldWrap).buildTransaction({'chainId': '0xa4b1', 'nonce': nonce, 'value' : executionFee,'gasPrice': Web3.toWei('1', 'gwei')})
+        longboi = orderbook_contract.functions.createIncreaseOrder(path, amountIn, index_token,  min_out,  size_delta, index_token,  is_long, execution_price, triggerAboveThreshold, executionFee,    shouldWrap).buildTransaction({'chainId': '0xa4b1', 'nonce': nonce, 'value' : executionFee,'gasPrice': Web3.toWei('1', 'gwei')})
         send_tx(private_key, orderbook_contract, longboi)
 
 
 #TODO Limit Short
+
+def limitShort(coin, collateral, leverage, amount_in, price):
+    print("Shortboi")
+    nonce = arbiw3.eth.get_transaction_count(account.address)
+    path = short_collateral_path(collateral)
+    is_long = False
+    executionFee = Web3.toWei( 300000, "gwei")
+    if (coin == "btc"):
+        index_token = Web3.toChecksumAddress(btc.lower())
+        min_out = 0
+        amountIn = Web3.toWei(amount_in, 'mwei')  #convert to STABLECOINS
+        triggerAboveThreshold = True
+        shouldWrap = False
+        size_delta = Web3.toWei(str(leverage * amount_in ), 'tether')
+        execution_price = Web3.toWei(str(price ), "tether")
+        print(path, ", ",index_token, ", ",   ",", min_out, ", ", size_delta, ", ", is_long, ", ", execution_price, ", ", )
+        shortboi = orderbook_contract.functions.createIncreaseOrder(path,  amountIn, index_token, min_out,  size_delta,  index_token, is_long, execution_price, triggerAboveThreshold, executionFee, shouldWrap).buildTransaction({'chainId': '0xa4b1', 'nonce': nonce, 'value' : executionFee,'gasPrice': Web3.toWei('1', 'gwei')})
+        send_tx(private_key, gmx_position_router, shortboi)
+    elif (coin == "eth"):
+        index_token = Web3.toChecksumAddress(weth.lower())
+        min_out = 0
+        amountIn = Web3.toWei(amount_in, 'mwei')   #convert to STABLECOINS
+        triggerAboveThreshold = True
+        shouldWrap = False
+        size_delta = Web3.toWei(str(leverage * amount_in ), 'tether')
+        execution_price = Web3.toWei(str(price ), "tether")
+        print(path, ", ",index_token, ", ",   ",", min_out, ", ", size_delta, ", ", is_long, ", ", execution_price, ", ", )
+        shortboi = orderbook_contract.functions.createIncreaseOrder(path,  amountIn, index_token,  min_out,  size_delta,  index_token, is_long, execution_price, triggerAboveThreshold, executionFee, shouldWrap).buildTransaction({'chainId': '0xa4b1', 'nonce': nonce, 'value' : executionFee,'gasPrice': Web3.toWei('1', 'gwei')})
+        send_tx(private_key, gmx_position_router, shortboi)
 
 
 #TODO Market Close Long
