@@ -12,8 +12,12 @@ print("WETH value: ", eth_price*weth_balance)
 usdc_balance  = gmx.check_balance("usdc")
 udst_balance = gmx.check_balance("usdt")
 
-gmx.lookupPositions(gmx.account.address, "btc")
-gmx.lookupPositions(gmx.account.address, "eth")
+#gmx.lookupPositions(gmx.account.address, "btc")
+#gmx.lookupPositions(gmx.account.address, "eth")
+
+
+#current_pos = gmx.getPosition( gmx.account.address, "eth", "weth", True)
+#print(current_pos)
 
 #gmx.marketLong("eth", "weth", 5, 0.05, eth_price, 1)
 #gmx.marketLong("btc", "usdt", 5, 100, btc_price, 1)
@@ -23,3 +27,5 @@ gmx.lookupPositions(gmx.account.address, "eth")
 #gmx.limitLong("btc", "btc", 5, 0.001, 22000.0)
 #gmx.limitShort("btc", "usdt", 5, 100, 35000.0)
 #gmx.limitShort("eth", "usdt", 5, 100, 2500.0)
+#gmx.marketCloseLong("eth", "weth", 0.25, eth_price, 1)
+#gmx.marketCloseShort("btc", "usdt", 500/btc_price, btc_price, 1)

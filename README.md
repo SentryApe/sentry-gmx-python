@@ -2,10 +2,10 @@
 This is an incomplete project! use at your own risk!
 
 Dependencies:
-You need python3, flask, and web3.py
+You need python3, flask, and web3.py.
 You need your own Arbitrum JSON RPC and your own private key to run this
 
-
+You must set MAIN_PK and INFURA_ARBI environment variable 
 
 
 gmx.py is a utility library for making trades on GMX
