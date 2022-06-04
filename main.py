@@ -52,10 +52,10 @@ def gmxShort():
         #close short
         if data["pair"] == "ETHUSD":
             #stablecoin  assumed
-            gmx.marketCloseLong("eth", default_stablecoin, float(data["quantity"]), data["price"], default_slippage)
+            gmx.marketCloseShort("eth", default_stablecoin, float(data["quantity"]), data["price"], default_slippage)
         elif data["pair"] == "BTCUSD":
             #stablecoin  assumed
-            gmx.marketCloseLong("btc", default_stablecoin, float(data["quantity"]), data["price"], default_slippage)
+            gmx.marketCloseShort("btc", default_stablecoin, float(data["quantity"]), data["price"], default_slippage)
     return data
 
 
