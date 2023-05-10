@@ -4,10 +4,10 @@ Major Update: May 2023
 Python Flask based Position Manager for GMX and other on-chain exchanges. This is an incomplete project! Use at your own risk!
 
 Dependencies:
-* You need Python3
+* Python3
 * Pandas
 * Flask
-* Web3.py.
+* Web3.py
 * You need your own Arbitrum JSON RPC
 * Your own private key
 * You must set MAIN_PK and INFURA_ARBI environment variable

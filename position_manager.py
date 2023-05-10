@@ -2,6 +2,7 @@ import gmx
 import pandas as pd
 import requests
 import time
+import math
 from datetime import datetime, timedelta
 from decimal import Decimal
 #Positions
@@ -131,15 +132,16 @@ def evaluate_stop_conditions(price_data,  position):
     position['stop_price'] = stop_loss_price
     # Get the current price of the asset
     current_price = price_data[symbol].iloc[-1]
+
     print(position['stop_price'])
     # Close the position if the stop loss price is triggered
     if long:
-        if (stop_loss_price is not  None and current_price) and (Decimal(current_price) <= Decimal(stop_loss_price)):
+        if (stop_loss_price is not  None and not math.isnan(current_price)) and (Decimal(current_price) <= Decimal(stop_loss_price)):
             close_long(position, current_price)
             position["stop_triggered"] = True
             position["exit_price"] = current_price
     else:
-        if (stop_loss_price is not None and current_price) and (Decimal(current_price) >= Decimal(stop_loss_price)):
+        if (stop_loss_price is not None and not math.isnan(current_price)) and (Decimal(current_price) >= Decimal(stop_loss_price)):
             close_short(position, current_price)
             position["stop_triggered"] = True
             position["exit_price"] = current_price
@@ -238,9 +240,19 @@ def poll_assets(price_data):
             #print(newdata)
             new_df = pd.merge_asof(newdata, newprice, on='timestamp', direction='forward')
             newprice = new_df
+
+    if newprice.empty:
+        newprice["timestamp"] =  [datetime.now()]
+        newprice["ETHUSD"] = round(gmx.getPrice("eth"), 2)
+        newprice["BTCUSD"] = round(gmx.getPrice("btc"), 2)
+    if math.isnan(newprice["ETHUSD"].iloc[-1]):
+        newprice["ETHUSD"].iloc[-1] = round(gmx.getPrice("eth"), 2)
+    if math.isnan(newprice["BTCUSD"].iloc[-1]):
+        newprice["BTCUSD"].iloc[-1] = round(gmx.getPrice("btc"), 2)
     print(newprice)
     price_data = pd.concat([price_data, newprice], axis=0)
     price_data = price_data.sort_values(by='timestamp', ascending=True)
+
     # Save the DataFrame to a CSV file
     price_data.to_csv('price_data.csv', index=False)
 
