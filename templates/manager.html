@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>On-Chain Position Manager</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+  <script>
+    const positionsData = {};
+  </script>
+</head>
+<body>
+  {% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <div class="flash-messages">
+    {% for message in messages %}
+      <div class="flash-message">{{ message }}</div>
+    {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+
+<h1>On-Chain Position Manager</h1>
+<table border="2">
+  <tr>
+    <th>Coin</th>
+    <th>Prices</th>
+  </tr>
+  <tr>
+    <td>BTC</td>
+    <td>{{ btc_price }}</td>
+  </tr>
+  <tr>
+    <td>ETH</td>
+    <td>{{ eth_price }}</td>
+  </tr>
+</table>
+<h2>Open Positions</h2>
+<table border="2">
+  <tr>
+    <th>Exchange</th>
+    <th>Last Increased Time</th>
+    <th>Symbol</th>
+    <th>Long/Short</th>
+    <th>Entry Price</th>
+    <th>Value</th>
+    <th>Quantity</th>
+    <th>PNL</th>
+    <th>Stop Price</th>
+    <th>Select for Monitoring</th>
+  </tr>
+  {% for position in open_positions %}
+  {% set position_id = loop.index %}
+    <tr>
+      <td>{{ position.exchange }}</td>
+      <td>{{ position.time }}</td>
+      <td>{{ position.symbol }}</td>
+      <td>{{position.leverage}}x {{ position.bias }}</td>
+      <td>{{ position.entry_price }}</td>
+      <td>{{ position.value }}</td>
+      <td>{{ position.quantity }}</td>
+      <td>{{ position.sign }}{{ position.delta }}</td>
+      <td>{{ position.stop_price }}</td>
+    <td>
+      {{position.stop_strategy}}
+      <button type="button" class="select-position" data-position-id="{{ position_id }}">Select</button>
+    </td>
+    </tr>
+  <script>
+    positionsData[{{ position_id }}] = {{ position | tojson }};
+  </script>
+  {% endfor %}
+</table><h2>Apply Stop Strategy</h2>
+<form id="stop_strategy_form" action="/apply_stop_strategy" method="POST">
+  <input type="hidden" name="selected_position_exchange" id="selected_position_exchange">
+  <input type="hidden" name="selected_position_time" id="selected_position_time">
+  <input type="hidden" name="selected_position_symbol" id="selected_position_symbol">
+  <input type="hidden" name="selected_position_bias" id="selected_position_bias">
+  <input type="hidden" name="selected_position_entry_price" id="selected_position_entry_price">
+  <input type="hidden" name="selected_position_quantity" id="selected_position_quantity">
+    <div class="radio-container">
+        <input type="radio" id="fixed" name="stop_strategy" value="fixed" >
+        <label for="fixed">Fixed $ Stop</label>
+    </div>
+    <div class="radio-container">
+        <input type="radio" id="fixed_pct" name="stop_strategy" value="fixed_pct">
+        <label for="fixed_pct">Fixed Percentage Stop</label>
+    </div>
+    <div class="radio-container">
+        <input type="radio" id="trailing_pct" name="stop_strategy" value="trailing_pct" checked>
+        <label for="trailing_pct">Trailing Percentage Stop</label>
+    </div>
+  <br>
+  <label for="stop_strategy_arg" id="stop_strategy_arg_label">Trailing Stop % (out of 100%):</label>
+  <input type="number" name="stop_strategy_arg" id="stop_strategy_arg" step="0.01">
+  <br>
+    <button type="submit">Apply Stop Strategy and Start Monitoring</button>
+</form>
+
+
+
+
+<form action="{{ url_for('start_monitor_route') }}" method="get">
+    <button type="submit">Start Monitoring</button>
+</form>
+
+<h2>All Positions</h2>
+<table border="2">
+  <tr>
+    <th>Exchange</th>
+    <th>Last Increased Time</th>
+    <th>Symbol</th>
+    <th>Long/Short</th>
+    <th>Entry Price</th>
+    <th>Value</th>
+    <th>Quantity</th>
+    <th>PNL</th>
+    <th>Stop Price</th>
+    <th>Stop Strategy</th>
+  </tr>
+  {% for position in all_positions %}
+  {% set position_id = loop.index %}
+    <tr>
+      <td>{{ position.exchange }}</td>
+      <td>{{ position.time }}</td>
+      <td>{{ position.symbol }}</td>
+      <td>{{position.leverage}}x {{ position.bias }}</td>
+      <td>{{ position.entry_price }}</td>
+      <td>{{ position.value }}</td>
+      <td>{{ position.quantity }}</td>
+      <td>{{ position.sign }}{{ position.delta }}</td>
+      <td>{{ position.stop_price }}</td>
+    <td>
+      {{position.stop_strategy}}
+    </td>
+    </tr>
+  {% endfor %}
+
+
+
+<script>
+const radioButtons = document.querySelectorAll('input[type=radio][name="stop_strategy"]');
+
+radioButtons.forEach(radioButton => {
+  radioButton.addEventListener("change", function() {
+    const stopStrategy = this.value;
+    const labelElement = document.getElementById("stop_strategy_arg_label");
+
+    if (stopStrategy === "fixed") {
+      labelElement.innerHTML = "Fixed Stop $:";
+      stopStrategyArgInput.setAttribute("placeholder", "Fixed Stop Value");
+      stopStrategyArgInput.setAttribute("step", "any");
+    } else if (stopStrategy === "fixed_pct") {
+      labelElement.innerHTML = "Fixed Stop % (out of 100%):";
+      stopStrategyArgInput.setAttribute("placeholder", "Fixed Percentage");
+      stopStrategyArgInput.setAttribute("step", "any");
+    } else if (stopStrategy === "trailing_pct") {
+      labelElement.innerHTML = "Trailing Stop % (out of 100%):";
+      stopStrategyArgInput.setAttribute("placeholder", "Trailing Percentage");
+      stopStrategyArgInput.setAttribute("step", "any");
+    }
+  });
+});
+
+
+  document.querySelectorAll('.select-position').forEach(button => {
+  button.addEventListener('click', function() {
+    const positionId = parseInt(this.dataset.positionId);
+    const position = positionsData[positionId];
+      document.getElementById('selected_position_exchange').value = position.exchange;
+      document.getElementById('selected_position_time').value = position.time;
+      document.getElementById('selected_position_symbol').value = position.symbol;
+      document.getElementById('selected_position_bias').value = position.bias;
+      document.getElementById('selected_position_entry_price').value = position.entry_price;
+      document.getElementById('selected_position_quantity').value = position.quantity;
+      // Set the other hidden input fields as needed
+
+      // Optional: Highlight the selected row
+      document.querySelectorAll('tr.selected-position').forEach(row => {
+        row.classList.remove('selected-position');
+      });
+      this.closest('tr').classList.add('selected-position');
+    });
+  });
+
+
+</script>
+
+
+
+
+</body>
+</html>

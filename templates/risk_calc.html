@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>On-Chain Position Manager</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+
+    </head>
+    <body>
+<div>
+  <label for="tradeSize">Trade Size: </label>
+  <input type="number" id="tradeSize" name="tradeSize" min="0">
+</div>
+<div>
+  <label for="leverage">Leverage: </label>
+  <input type="number" id="leverage" name="leverage" min="0">
+</div>
+<div>
+  <label for="entryPrice">Entry Price: </label>
+  <input type="number" id="entryPrice" name="entryPrice" min="0">
+</div>
+<div>
+  <label for="exitPrice">Exit Price: </label>
+  <input type="number" id="exitPrice" name="exitPrice" min="0">
+</div>
+<div>
+  <label for="stopLossType">Stop Loss Type: </label>
+  <select id="stopLossType" name="stopLossType">
+    <option value="trailing">Trailing Stop Loss</option>
+    <option value="fixed">Fixed Percentage Stop Loss</option>
+  </select>
+</div>
+<div>
+  <label for="stopLoss">Stop Loss (%): </label>
+  <input type="number" id="stopLoss" name="stopLoss" min="0">
+</div>
+<div>
+  <button onclick="calculateRisk()">Calculate Risk</button>
+</div>
+<div>
+  <label for="riskAmount">Risk Amount: </label>
+  <input type="number" id="riskAmount" name="riskAmount" disabled>
+</div>
+
+<!-- JavaScript Code for Risk Calculator Widget -->
+<script>
+  function calculateRisk() {
+    // Get Input Values
+    const tradeSize = Number(document.getElementById("tradeSize").value);
+    const leverage = Number(document.getElementById("leverage").value);
+    const entryPrice = Number(document.getElementById("entryPrice").value);
+    const exitPrice = Number(document.getElementById("exitPrice").value);
+    const stopLossType = document.getElementById("stopLossType").value;
+    const stopLoss = Number(document.getElementById("stopLoss").value);
+
+    // Calculate Risk Amount
+    let riskAmount = 0;
+    if (stopLossType === "trailing") {
+      const trailAmount = (entryPrice * stopLoss) / 100;
+      const trailExitPrice = exitPrice - trailAmount;
+      const profitAmount = (trailExitPrice - entryPrice) * tradeSize * leverage;
+      if (profitAmount < 0) {
+        riskAmount = Math.abs(profitAmount);
+      }
+    } else if (stopLossType === "fixed") {
+      const stopAmount = (entryPrice * stopLoss) / 100;
+      const stopExitPrice = entryPrice - stopAmount;
+      const profitAmount = (stopExitPrice - entryPrice) * tradeSize * leverage;
+      if (profitAmount < 0) {
+        riskAmount = Math.abs(profitAmount);
+      }
+    }
+
+    // Set Output Value
+    document.getElementById("riskAmount").value = riskAmount.toFixed(2);
+  }
+</script>
+
+
+</body>
+</html>
