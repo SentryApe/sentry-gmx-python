@@ -243,8 +243,8 @@ def poll_assets(price_data):
 
     if newprice.empty:
         newprice["timestamp"] =  [datetime.now()]
-        newprice["ETHUSD"] = round(gmx.getPrice("eth"), 2)
-        newprice["BTCUSD"] = round(gmx.getPrice("btc"), 2)
+        newprice["ETHUSD"] = [round(gmx.getPrice("eth"), 2)]
+        newprice["BTCUSD"] = [round(gmx.getPrice("btc"), 2)]
     if math.isnan(newprice["ETHUSD"].iloc[-1]):
         newprice["ETHUSD"].iloc[-1] = round(gmx.getPrice("eth"), 2)
     if math.isnan(newprice["BTCUSD"].iloc[-1]):

@@ -91,6 +91,56 @@ def gmxLong():
             gmx.marketCloseLong("btc", default_btc_collateral, float(data["quantity"]), data["price"], default_slippage)
     return data
 
+@app.route('/gmxLimitLong',methods=['POST'])
+def gmxLimitLong():
+    #good idea to authenticate big bad requests
+    data = request.json
+    if data["api_key"] == os.environ.get("HOOK_API_KEY_1"):
+        print('Token {0} {1} {2} {3}'.format(data["pair"], data["action"], data["price"], data["quantity"]))
+        lev = set_leverage(data)
+        if data['action'] == "buy":
+            if data["pair"] == "ETHUSD":
+                #coin margined assumed
+                gmx.limitLong("eth", default_eth_collateral, lev,  float(data["quantity"])/lev, float(data["price"]))
+            elif data["pair"] == "BTCUSD":
+                #coin margined assumed
+                gmx.limitLong("btc", default_btc_collateral, lev,  float(data["quantity"])/lev, float(data["price"]))
+        elif data['action'] == "sell":
+        #close long
+            if data["pair"] == "ETHUSD":
+                #coin margined assumed
+                gmx.marketCloseLong("eth", default_eth_collateral, float(data["quantity"]), float(data["price"]), default_slippage)
+            elif data["pair"] == "BTCUSD":
+                #coin margined assumed
+                gmx.marketCloseLong("btc", default_btc_collateral, float(data["quantity"]), float(data["price"]), default_slippage)
+        return data
+
+
+@app.route('/gmxLimitShort',methods=['POST'])
+def gmxLimitShort():
+    #good idea to authenticate big bad requests
+    data = request.json
+    if data["api_key"] == os.environ.get("HOOK_API_KEY_1"):
+        print('Token {0} {1} {2} {3}'.format(data["pair"], data["action"], float(data["price"]), data["quantity"]))
+        lev = set_leverage(data)
+        stablecoin = set_stablecoin(data)
+        if data['action'] == "sell":
+            if data["pair"] == "ETHUSD":
+                #stable denominated
+                gmx.limitShort("eth", stablecoin, lev, float(data["quantity"])*float(float(data["price"]))/lev, float(data["price"]))
+            elif data["pair"] == "BTCUSD":
+                #stable denominated
+                gmx.limitShort("btc", stablecoin, lev, float(data["quantity"])*float(float(data["price"]))/lev, float(data["price"]))
+        elif data['action'] == "buy":
+            #close short
+            if data["pair"] == "ETHUSD":
+                #stablecoin  assumed
+                gmx.marketCloseShort("eth", stablecoin, float(data["quantity"]), float(data["price"]), default_slippage)
+            elif data["pair"] == "BTCUSD":
+                #stablecoin  assumed
+                gmx.marketCloseShort("btc", stablecoin, float(data["quantity"]), float(data["price"]), default_slippage)
+        return data
+
 @app.route('/gmxShort',methods=['POST'])
 def gmxShort():
     #good idea to authenticate big bad requests
