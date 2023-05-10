@@ -363,7 +363,7 @@ def marketCloseLong(coin, collateral, qty, price, slippage):
             collateral_delta = 0
             withdrawETH = False #gets weth
             print(path, ", ",index_token, ", ",   ",", collateral_delta, ", ", size_delta, ", ", is_long, ", ", execution_price, ", ", )
-            closeboi = position_router_contract.functions.createDecreasePosition(path, index_token, collateral_delta,  size_delta,  is_long, account.address, execution_price, min_out, executionFee, withdrawETH).build_transaction({'chainId': '0xa4b1', 'nonce': nonce, 'value' : executionFee,'gasPrice': Web3.to_wei('1', 'gwei')})
+            closeboi = position_router_contract.functions.createDecreasePosition(path, index_token, collateral_delta,  size_delta,  is_long, account.address, execution_price, min_out, executionFee, withdrawETH, AddressZero).build_transaction({'chainId': '0xa4b1', 'nonce': nonce, 'value' : executionFee,'gasPrice': Web3.to_wei('1', 'gwei')})
             send_tx(private_key, gmx_position_router, closeboi)
         elif (coin == "eth" and collateral == "eth"):
             path = [Web3.to_checksum_address(weth.lower())]
@@ -372,7 +372,7 @@ def marketCloseLong(coin, collateral, qty, price, slippage):
             collateral_delta = 0
             withdrawETH = True #gets weth
             print(path, ", ",index_token, ", ",   ",", collateral_delta, ", ", size_delta, ", ", is_long, ", ", execution_price, ", ", )
-            closeboi = position_router_contract.functions.createDecreasePosition(path, index_token, collateral_delta,  size_delta,  is_long, account.address, execution_price, min_out, executionFee, withdrawETH).build_transaction({'chainId': '0xa4b1', 'nonce': nonce, 'value' : executionFee,'gasPrice': Web3.to_wei('1', 'gwei')})
+            closeboi = position_router_contract.functions.createDecreasePosition(path, index_token, collateral_delta,  size_delta,  is_long, account.address, execution_price, min_out, executionFee, withdrawETH, AddressZero).build_transaction({'chainId': '0xa4b1', 'nonce': nonce, 'value' : executionFee,'gasPrice': Web3.to_wei('1', 'gwei')})
             send_tx(private_key, gmx_position_router, closeboi)
         elif (coin == "eth" and collateral == "usdt"):
             path = [Web3.to_checksum_address(usdt.lower())]
@@ -381,7 +381,7 @@ def marketCloseLong(coin, collateral, qty, price, slippage):
             collateral_delta = 0
             withdrawETH = False #gets weth
             print(path, ", ",index_token, ", ",   ",", collateral_delta, ", ", size_delta, ", ", is_long, ", ", execution_price, ", ", )
-            closeboi = position_router_contract.functions.createDecreasePosition(path, index_token, collateral_delta,  size_delta,  is_long, account.address, execution_price, min_out, executionFee, withdrawETH).build_transaction({'chainId': '0xa4b1', 'nonce': nonce, 'value' : executionFee,'gasPrice': Web3.to_wei('1', 'gwei')})
+            closeboi = position_router_contract.functions.createDecreasePosition(path, index_token, collateral_delta,  size_delta,  is_long, account.address, execution_price, min_out, executionFee, withdrawETH, AddressZero).build_transaction({'chainId': '0xa4b1', 'nonce': nonce, 'value' : executionFee,'gasPrice': Web3.to_wei('1', 'gwei')})
             send_tx(private_key, gmx_position_router, closeboi)
         elif (coin == "eth" and collateral == "usdc"):
             path = [Web3.to_checksum_address(usdc.lower())]
@@ -390,7 +390,7 @@ def marketCloseLong(coin, collateral, qty, price, slippage):
             collateral_delta = 0
             withdrawETH = False #gets weth
             print(path, ", ",index_token, ", ",   ",", collateral_delta, ", ", size_delta, ", ", is_long, ", ", execution_price, ", ", )
-            closeboi = position_router_contract.functions.createDecreasePosition(path, index_token, collateral_delta,  size_delta,  is_long, account.address, execution_price, min_out, executionFee, withdrawETH).build_transaction({'chainId': '0xa4b1', 'nonce': nonce, 'value' : executionFee,'gasPrice': Web3.to_wei('1', 'gwei')})
+            closeboi = position_router_contract.functions.createDecreasePosition(path, index_token, collateral_delta,  size_delta,  is_long, account.address, execution_price, min_out, executionFee, withdrawETH, AddressZero).build_transaction({'chainId': '0xa4b1', 'nonce': nonce, 'value' : executionFee,'gasPrice': Web3.to_wei('1', 'gwei')})
             send_tx(private_key, gmx_position_router, closeboi)
         elif (coin == "btc" and collateral == "btc"):
             path = [Web3.to_checksum_address(btc.lower())]
@@ -399,7 +399,7 @@ def marketCloseLong(coin, collateral, qty, price, slippage):
             collateral_delta = 0
             withdrawETH = False #no eth
             print(path, ", ",index_token, ", ",   ",", collateral_delta, ", ", size_delta, ", ", is_long, ", ", execution_price, ", ", )
-            closeboi = position_router_contract.functions.createDecreasePosition(path, index_token, collateral_delta,  size_delta,  is_long, account.address, execution_price, min_out, executionFee, withdrawETH).build_transaction({'chainId': '0xa4b1', 'nonce': nonce, 'value' : executionFee,'gasPrice': Web3.to_wei('1', 'gwei')})
+            closeboi = position_router_contract.functions.createDecreasePosition(path, index_token, collateral_delta,  size_delta,  is_long, account.address, execution_price, min_out, executionFee, withdrawETH, AddressZero).build_transaction({'chainId': '0xa4b1', 'nonce': nonce, 'value' : executionFee,'gasPrice': Web3.to_wei('1', 'gwei')})
             send_tx(private_key, gmx_position_router, closeboi)
         elif (coin == "btc" and collateral == "usdc"):
             path = [Web3.to_checksum_address(usdc.lower())]
@@ -408,7 +408,7 @@ def marketCloseLong(coin, collateral, qty, price, slippage):
             collateral_delta = 0
             withdrawETH = False #no eth
             print(path, ", ",index_token, ", ",   ",", collateral_delta, ", ", size_delta, ", ", is_long, ", ", execution_price, ", ", )
-            closeboi = position_router_contract.functions.createDecreasePosition(path, index_token, collateral_delta,  size_delta,  is_long, account.address, execution_price, min_out, executionFee, withdrawETH).build_transaction({'chainId': '0xa4b1', 'nonce': nonce, 'value' : executionFee,'gasPrice': Web3.to_wei('1', 'gwei')})
+            closeboi = position_router_contract.functions.createDecreasePosition(path, index_token, collateral_delta,  size_delta,  is_long, account.address, execution_price, min_out, executionFee, withdrawETH, AddressZero).build_transaction({'chainId': '0xa4b1', 'nonce': nonce, 'value' : executionFee,'gasPrice': Web3.to_wei('1', 'gwei')})
             send_tx(private_key, gmx_position_router, closeboi)
 
 
@@ -436,7 +436,7 @@ def marketCloseShort(coin, collateral, qty, price, slippage):
             collateral_delta = 0
             withdrawETH = False #gets weth
             print(path, ", ",index_token, ", ",   ",", collateral_delta, ", ", size_delta, ", ", is_long, ", ", execution_price, ", ", )
-            closeboi = position_router_contract.functions.createDecreasePosition(path, index_token, collateral_delta,  size_delta,  is_long, account.address, execution_price, min_out, executionFee, withdrawETH).build_transaction({'chainId': '0xa4b1', 'nonce': nonce, 'value' : executionFee,'gasPrice': Web3.to_wei('1', 'gwei')})
+            closeboi = position_router_contract.functions.createDecreasePosition(path, index_token, collateral_delta,  size_delta,  is_long, account.address, execution_price, min_out, executionFee, withdrawETH, AddressZero).build_transaction({'chainId': '0xa4b1', 'nonce': nonce, 'value' : executionFee,'gasPrice': Web3.to_wei('1', 'gwei')})
             send_tx(private_key, gmx_position_router, closeboi)
         elif (coin == "eth" and collateral == "usdc"):
             path = [Web3.to_checksum_address(usdc.lower())]
@@ -445,7 +445,7 @@ def marketCloseShort(coin, collateral, qty, price, slippage):
             collateral_delta = 0
             withdrawETH = False #gets weth
             print(path, ", ",index_token, ", ",   ",", collateral_delta, ", ", size_delta, ", ", is_long, ", ", execution_price, ", ", )
-            closeboi = position_router_contract.functions.createDecreasePosition(path, index_token, collateral_delta,  size_delta,  is_long, account.address, execution_price, min_out, executionFee, withdrawETH).build_transaction({'chainId': '0xa4b1', 'nonce': nonce, 'value' : executionFee,'gasPrice': Web3.to_wei('1', 'gwei')})
+            closeboi = position_router_contract.functions.createDecreasePosition(path, index_token, collateral_delta,  size_delta,  is_long, account.address, execution_price, min_out, executionFee, withdrawETH, AddressZero).build_transaction({'chainId': '0xa4b1', 'nonce': nonce, 'value' : executionFee,'gasPrice': Web3.to_wei('1', 'gwei')})
             send_tx(private_key, gmx_position_router, closeboi)
         elif (coin == "btc" and collateral == "usdt"):
             path = [Web3.to_checksum_address(usdt.lower())]
@@ -454,7 +454,7 @@ def marketCloseShort(coin, collateral, qty, price, slippage):
             collateral_delta = 0
             withdrawETH = False #no eth
             print(path, ", ",index_token, ", ",   ",", collateral_delta, ", ", size_delta, ", ", is_long, ", ", execution_price, ", ", )
-            closeboi = position_router_contract.functions.createDecreasePosition(path, index_token, collateral_delta,  size_delta,  is_long, account.address, execution_price, min_out, executionFee, withdrawETH).build_transaction({'chainId': '0xa4b1', 'nonce': nonce, 'value' : executionFee,'gasPrice': Web3.to_wei('1', 'gwei')})
+            closeboi = position_router_contract.functions.createDecreasePosition(path, index_token, collateral_delta,  size_delta,  is_long, account.address, execution_price, min_out, executionFee, withdrawETH, AddressZero).build_transaction({'chainId': '0xa4b1', 'nonce': nonce, 'value' : executionFee,'gasPrice': Web3.to_wei('1', 'gwei')})
             send_tx(private_key, gmx_position_router, closeboi)
         elif (coin == "btc" and collateral == "usdc"):
             path = [Web3.to_checksum_address(usdc.lower())]
@@ -463,7 +463,7 @@ def marketCloseShort(coin, collateral, qty, price, slippage):
             collateral_delta = 0
             withdrawETH = False #no eth
             print(path, ", ",index_token, ", ",   ",", collateral_delta, ", ", size_delta, ", ", is_long, ", ", execution_price, ", ", )
-            closeboi = position_router_contract.functions.createDecreasePosition(path, index_token, collateral_delta,  size_delta,  is_long, account.address, execution_price, min_out, executionFee, withdrawETH).build_transaction({'chainId': '0xa4b1', 'nonce': nonce, 'value' : executionFee,'gasPrice': Web3.to_wei('1', 'gwei')})
+            closeboi = position_router_contract.functions.createDecreasePosition(path, index_token, collateral_delta,  size_delta,  is_long, account.address, execution_price, min_out, executionFee, withdrawETH, AddressZero).build_transaction({'chainId': '0xa4b1', 'nonce': nonce, 'value' : executionFee,'gasPrice': Web3.to_wei('1', 'gwei')})
             send_tx(private_key, gmx_position_router, closeboi)
 
 
