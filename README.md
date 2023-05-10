@@ -1,11 +1,11 @@
 # sentry-gmx-python
 Major Update: May 2023
 
-== Python Flask based Position Manager for GMX and other on-chain exchanges.
+## Python Flask based Position Manager for GMX and other on-chain exchanges.
 
 This is an incomplete project! Use at your own risk!
 
-== Dependencies:
+## Dependencies:
 * Python3
 * Pandas
 * Flask
@@ -14,7 +14,7 @@ This is an incomplete project! Use at your own risk!
 * Your own private key
 * You must set MAIN_PK and INFURA_ARBI environment variable
 
-== Installation
+## Installation
 Install python3 on your machine
 
 pip3 install Pandas
@@ -23,14 +23,14 @@ pip3 install web3.py (may need to install windows visual studio c dev tools)
 
 
 
-== Files
+## Files
 gmx.py is a utility library for making trades on GMX
 
 position_manger.py is a module for implementing a position manager that tracks asset prices  via watching a Coingecko API. This position manager can run in a thread and triggers stop losses (and eventually takes profits?).
 
 main.py is a webserver which will execute trades for you and intialize the position manager for you. You may run it on your local machine or run as a flask server connected to the internet to consume webhooks and trade remotely via GMX.
 
-== Run
+## Run
 
 Run using "python3 main.py"
 

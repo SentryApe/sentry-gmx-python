@@ -105,11 +105,12 @@ def calc_trailing_stop(price_data, symbol, start_time, start_price, stop_loss_pc
 
 def close_long(position, current_price):
     # Implement additional logic to close the long position by exchange
-    gmx.marketCloseLong(position["coin"], position["collateral_coin"], position['quantity'], current_price, default_slippage)
+    print(position["collateral_coin"] )
+    gmx.marketCloseLong(position["coin"], position["collateral_coin"] if position["collateral_coin"] else default_long_collateral, position['quantity'], current_price, default_slippage)
 
 def close_short(position, current_price):
     # Implement additional logic to close the short position by exchange
-    gmx.marketCloseShort(position["coin"], position["collateral_coin"], position['quantity'], current_price, default_slippage)
+    gmx.marketCloseShort(position["coin"], position["collateral_coin"]  if position["collateral_coin"] else default_short_collateral, position['quantity'], current_price, default_slippage)
 
 
 def evaluate_stop_conditions(price_data,  position):
@@ -195,7 +196,7 @@ def monitor_positions(suspend=True):
             print("No open positions found. Stopping the monitoring process.")
             break
         # Sleep for 5 minutes before the next iteration
-        time.sleep(5 * 60)
+        time.sleep(2 * 60)
 
 #Price Updates
 def poll_assets(price_data):
@@ -205,54 +206,60 @@ def poll_assets(price_data):
         price_data = pd.DataFrame(columns=columns)
         price_data['timestamp'] = pd.to_datetime(price_data['timestamp'])
         last_updated = datetime.now() - timedelta(days=1)
+        last_coin_gecko_call = datetime.utcnow() - timedelta(days=1)
     else:
         last_updated = price_data['timestamp'].max()
         price_data["timestamp"] = price_data["timestamp"].dt.round('min')
-
+        last_coin_gecko_call = datetime.utcnow() - last_updated
 
     newprice = pd.DataFrame(columns=columns)
     newprice['timestamp'] = pd.to_datetime(newprice['timestamp'])
 
     # Get the current time and the time 24 hours ago
-    end_timestamp = datetime.now()
+    end_timestamp = datetime.utcnow()
     start_timestamp = end_timestamp - timedelta(days=1)
+    print(end_timestamp)
 
-    # Loop through the asset symbols and fetch price data for each asset
-    for symbol in symbols:
-        # Calculate the time difference in hours
-        time_diff = (end_timestamp - last_updated).total_seconds() / 3600 + 2
-        if time_diff > 24.0:
-            time_diff = 24.0
-        # Get the asset's market data from CoinGecko
-        response = requests.get(f"{api_base_url}/coins/{symbol}/market_chart", params={
-            'id': symbol,
-            "vs_currency": "usd",
-            'days': (time_diff/24.0)
-        })
-
-        # Check if the request was successful
-        if response.status_code == 200:
-            json_data = response.json()
-            prices = json_data['prices']
-            newdata = pd.DataFrame(prices, columns=["timestamp", symbol_map[symbol]])
-            newdata["timestamp"] = pd.to_datetime(newdata["timestamp"], unit='ms')
-            newdata["timestamp"] = newdata["timestamp"].dt.round('min')
-            #print(newdata)
-            new_df = pd.merge_asof(newdata, newprice, on='timestamp', direction='forward')
-            newprice = new_df
-
-    if newprice.empty:
-        newprice["timestamp"] =  [datetime.now()]
-        newprice["ETHUSD"] = [round(gmx.getPrice("eth"), 2)]
-        newprice["BTCUSD"] = [round(gmx.getPrice("btc"), 2)]
-    if math.isnan(newprice["ETHUSD"].iloc[-1]):
-        newprice["ETHUSD"].iloc[-1] = round(gmx.getPrice("eth"), 2)
-    if math.isnan(newprice["BTCUSD"].iloc[-1]):
-        newprice["BTCUSD"].iloc[-1] = round(gmx.getPrice("btc"), 2)
-    print(newprice)
-    price_data = pd.concat([price_data, newprice], axis=0)
-    price_data = price_data.sort_values(by='timestamp', ascending=True)
-
+    if last_coin_gecko_call >  timedelta(minutes=5):
+        # Loop through the asset symbols and fetch price data for each asset
+        for symbol in symbols:
+            # Calculate the time difference in hours
+            time_diff = (end_timestamp - last_updated).total_seconds() / 3600 + 2
+            if time_diff > 24.0:
+                time_diff = 24.0
+            # Get the asset's market data from CoinGecko
+            response = requests.get(f"{api_base_url}/coins/{symbol}/market_chart", params={
+                'id': symbol,
+                "vs_currency": "usd",
+                'days': (time_diff/24.0)
+            })
+            # Check if the request was successful
+            if response.status_code == 200:
+                json_data = response.json()
+                prices = json_data['prices']
+                newdata = pd.DataFrame(prices, columns=["timestamp", symbol_map[symbol]])
+                newdata["timestamp"] = pd.to_datetime(newdata["timestamp"], unit='ms')
+                newdata["timestamp"] = newdata["timestamp"].dt.round('min')
+                #print(newdata)
+                new_df = pd.merge_asof(newdata, newprice, on='timestamp', direction='forward')
+                newprice = new_df
+        print("Coingecko call")
+        if newprice.empty:
+            newprice["timestamp"] =  [datetime.now()]
+            newprice["ETHUSD"] = [round(gmx.getPrice("eth"), 2)]
+            newprice["BTCUSD"] = [round(gmx.getPrice("btc"), 2)]
+        if math.isnan(newprice["ETHUSD"].iloc[-1]):
+            newprice["ETHUSD"].iloc[-1] = round(gmx.getPrice("eth"), 2)
+        if math.isnan(newprice["BTCUSD"].iloc[-1]):
+            newprice["BTCUSD"].iloc[-1] = round(gmx.getPrice("btc"), 2)
+        print(newprice)
+        price_data = pd.concat([price_data, newprice], axis=0)
+        price_data = price_data.sort_values(by='timestamp', ascending=True)
+    else:
+        price_data.loc[price_data['timestamp'] == last_updated, 'BTCUSD']  =  [round(gmx.getPrice("btc"), 2)]
+        price_data.loc[price_data['timestamp'] == last_updated, 'ETHUSD']  =  [round(gmx.getPrice("eth"), 2)]
+        print("Chainlink call")
+        print(price_data.loc[price_data['timestamp'] == last_updated])
     # Save the DataFrame to a CSV file
     price_data.to_csv('price_data.csv', index=False)
 
