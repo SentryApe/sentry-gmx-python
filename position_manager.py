@@ -15,7 +15,7 @@ symbols = ['bitcoin', 'ethereum', 'solana', 'matic-network', 'arbitrum', 'avalan
 symbol_map = {"bitcoin":"BTCUSD", 'ethereum':"ETHUSD", 'solana':'SOLUSD', 'matic-network':'MATICUSD', "arbitrum":"ARBUSD", 'avalanche-2':"AVAXUSD", "lido-dao":"LDOUSD", "fantom":"FTMUSD", "optimism":"OPUSD"}
 # CoinGecko API base URL
 api_base_url = "https://api.coingecko.com/api/v3"
-
+gmx_price_api = 'https://api.gmx.io/prices'
 # Define columns
 pos_columns = ['exchange', 'status', 'time', 'exit_time', 'exit_price', 'symbol',"coin", "collateral_coin", 'leverage', 'bias', 'entry_price', 'value', 'quantity', 'pnl', 'stop_price', 'stop_strategy', 'stop_strategy_args', 'stop_request_timestamp', 'stop_still_active', 'stop_triggered', "stop_time_completed"]
 #test_position = {'exchange':"GMX", 'status':"open", 'time':datetime.fromtimestamp(1682926472), "coin":"eth",'symbol':"ETHUSD", 'leverage':5.0, 'bias':"short", 'entry_price':1911, 'value':"36000", 'quantity':18.838304552, 'pnl':None, 'stop_price':None}

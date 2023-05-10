@@ -37,7 +37,7 @@ gmx_vault = "0x489ee077994B6658eAfA855C308275EAd8097C4A"
 gmx_router = "0xaBBc5F99639c9B6bCb58544ddf04EFA6802F4064"
 gmx_reader = "0x22199a49A999c351eF7927602CFB187ec3cae489"
 gmx_orderbook = "0x09f77E8A13De9a35a7231028187e9fD5DB8a2ACB"
-gmx_position_router = "0x3D6bA331e3D9702C5e8A8d254e5d8a285F223aba"
+gmx_position_router = "0xb87a436B93fFE9D75c5cFA7bAcFff96430b09868"
 chainlink_btc_addr = "0x6ce185860a4963106506C203335A2910413708e9"
 chainlink_eth_addr = "0x639Fe6ab55C921f74e7fac1ee960C0B6293ba612"
 
@@ -55,8 +55,8 @@ chainlink_eth_contract = arbiw3.eth.contract(address=chainlink_eth_addr, abi=abi
 #functions
 def send_tx(pk, addy, tx):
     signed_tx = arbiw3.eth.account.sign_transaction(tx, pk)
-    tx_hash = arbiw3.eth.sendRawTransaction(signed_tx.rawTransaction)
-    print(arbiw3.toHex(tx_hash))
+    tx_hash = arbiw3.eth.send_raw_transaction(signed_tx.rawTransaction)
+    print(arbiw3.to_hex(tx_hash))
 
 def getPrice(coin):
     if (coin == "btc"):
@@ -205,7 +205,7 @@ def marketLong(coin, collateral, leverage, amount_in, price, slippage):
         amountIn = Web3.to_wei(amount_in, 'ether')
         size_delta = Web3.to_wei(str(leverage * amount_in * price *  (1.0 + slippage / 100.0)), 'tether')
         print(path, ", ",index_token, ", ",   ",", min_out, ", ", size_delta, ", ", is_long, ", ", execution_price, ", ", )
-        longboi = position_router_contract.functions.createIncreasePosition(path, index_token, amountIn,  min_out,  size_delta,  is_long, execution_price, executionFee, referral).buildTransaction({'chainId': '0xa4b1', 'nonce': nonce, 'value' : executionFee,'gasPrice': Web3.to_wei('1', 'gwei')})
+        longboi = position_router_contract.functions.createIncreasePosition(path, index_token, amountIn,  min_out,  size_delta,  is_long, execution_price, executionFee, referral).build_transaction({'chainId': '0xa4b1', 'nonce': nonce, 'value' : executionFee,'gasPrice': Web3.to_wei('1', 'gwei')})
         send_tx(private_key, gmx_position_router, longboi)
     elif (coin == "eth" and (collateral == "usdt" or collateral == "usdc")):
         index_token = Web3.to_checksum_address(weth.lower())
@@ -213,7 +213,7 @@ def marketLong(coin, collateral, leverage, amount_in, price, slippage):
         amountIn = Web3.to_wei(amount_in , 'mwei')
         size_delta = Web3.to_wei(str(leverage * amount_in  *  (1.0 + slippage / 100.0)), 'tether')
         print(path, ", ",index_token, ", ",   ",", min_out, ", ", size_delta, ", ", is_long, ", ", execution_price, ", ", )
-        longboi = position_router_contract.functions.createIncreasePosition(path, index_token, amountIn,  min_out,  size_delta,  is_long, execution_price, executionFee, referral).buildTransaction({'chainId': '0xa4b1', 'nonce': nonce, 'value' : executionFee,'gasPrice': Web3.to_wei('1', 'gwei')})
+        longboi = position_router_contract.functions.createIncreasePosition(path, index_token, amountIn,  min_out,  size_delta,  is_long, execution_price, executionFee, referral).build_transaction({'chainId': '0xa4b1', 'nonce': nonce, 'value' : executionFee,'gasPrice': Web3.to_wei('1', 'gwei')})
         send_tx(private_key, gmx_position_router, longboi)
     elif (coin == "btc" and collateral == "btc"):
         index_token = Web3.to_checksum_address(btc.lower())
@@ -221,7 +221,7 @@ def marketLong(coin, collateral, leverage, amount_in, price, slippage):
         amountIn = Web3.to_wei(amount_in * 100, 'mwei')
         size_delta = Web3.to_wei(str(leverage * amount_in * price *  (1.0 + slippage / 100.0)), 'tether')
         print(path, ", ",index_token, ", ",   ",", min_out, ", ", size_delta, ", ", is_long, ", ", execution_price, ", ", )
-        longboi = position_router_contract.functions.createIncreasePosition(path, index_token, amountIn,  min_out,  size_delta,  is_long, execution_price, executionFee, referral).buildTransaction({'chainId': '0xa4b1', 'nonce': nonce, 'value' : executionFee,'gasPrice': Web3.to_wei('1', 'gwei')})
+        longboi = position_router_contract.functions.createIncreasePosition(path, index_token, amountIn,  min_out,  size_delta,  is_long, execution_price, executionFee, referral).build_transaction({'chainId': '0xa4b1', 'nonce': nonce, 'value' : executionFee,'gasPrice': Web3.to_wei('1', 'gwei')})
         send_tx(private_key, gmx_position_router, longboi)
     elif (coin == "btc" and (collateral == "usdt" or collateral == "usdc")):
         index_token = Web3.to_checksum_address(btc.lower())
@@ -229,7 +229,7 @@ def marketLong(coin, collateral, leverage, amount_in, price, slippage):
         amountIn = Web3.to_wei(amount_in , 'mwei')
         size_delta = Web3.to_wei(str(leverage * amount_in  *  (1.0 + slippage / 100.0)), 'tether')
         print(path, ", ",index_token, ", ",   ",", min_out, ", ", size_delta, ", ", is_long, ", ", execution_price, ", ", )
-        longboi = position_router_contract.functions.createIncreasePosition(path, index_token, amountIn,  min_out,  size_delta,  is_long, execution_price, executionFee, referral).buildTransaction({'chainId': '0xa4b1', 'nonce': nonce, 'value' : executionFee,'gasPrice': Web3.to_wei('1', 'gwei')})
+        longboi = position_router_contract.functions.createIncreasePosition(path, index_token, amountIn,  min_out,  size_delta,  is_long, execution_price, executionFee, referral).build_transaction({'chainId': '0xa4b1', 'nonce': nonce, 'value' : executionFee,'gasPrice': Web3.to_wei('1', 'gwei')})
         send_tx(private_key, gmx_position_router, longboi)
 
 #Market Short -> works for stable collateral shorts of btc and eth
@@ -248,7 +248,7 @@ def marketShort(coin, collateral, leverage, amount_in, price, slippage):
         size_delta = Web3.to_wei(str(leverage * amount_in *  (1.0 + slippage / 100.0)), 'tether')
         execution_price = Web3.to_wei(str(price * (1.0 - slippage / 100.0)), "tether")
         print(path, ", ",index_token, ", ",   ",", min_out, ", ", size_delta, ", ", is_long, ", ", execution_price, ", ", )
-        shortboi = position_router_contract.functions.createIncreasePosition(path, index_token, amountIn,  min_out,  size_delta,  is_long, execution_price, executionFee, referral).buildTransaction({'chainId': '0xa4b1', 'nonce': nonce, 'value' : executionFee,'gasPrice': Web3.to_wei('1', 'gwei')})
+        shortboi = position_router_contract.functions.createIncreasePosition(path, index_token, amountIn,  min_out,  size_delta,  is_long, execution_price, executionFee, referral).build_transaction({'chainId': '0xa4b1', 'nonce': nonce, 'value' : executionFee,'gasPrice': Web3.to_wei('1', 'gwei')})
         send_tx(private_key, gmx_position_router, shortboi)
     elif (coin == "eth"):
         index_token = Web3.to_checksum_address(weth.lower())
@@ -257,7 +257,7 @@ def marketShort(coin, collateral, leverage, amount_in, price, slippage):
         size_delta = Web3.to_wei(str(leverage * amount_in * (1.0 + slippage / 100.0)), 'tether')
         execution_price = Web3.to_wei(str(price * (1.0 - slippage / 100.0)), "tether")
         print(path, ", ",index_token, ", ",   ",", min_out, ", ", size_delta, ", ", is_long, ", ", execution_price, ", ", )
-        shortboi = position_router_contract.functions.createIncreasePosition(path, index_token, amountIn,  min_out,  size_delta,  is_long, execution_price, executionFee, referral).buildTransaction({'chainId': '0xa4b1', 'nonce': nonce, 'value' : executionFee,'gasPrice': Web3.to_wei('1', 'gwei')})
+        shortboi = position_router_contract.functions.createIncreasePosition(path, index_token, amountIn,  min_out,  size_delta,  is_long, execution_price, executionFee, referral).build_transaction({'chainId': '0xa4b1', 'nonce': nonce, 'value' : executionFee,'gasPrice': Web3.to_wei('1', 'gwei')})
         send_tx(private_key, gmx_position_router, shortboi)
 
 
@@ -278,7 +278,7 @@ def limitLong(coin, collateral, leverage, amount_in, price):
         triggerAboveThreshold = False
         shouldWrap = False
         print(path, ", ",index_token, ", ",   ",", min_out, ", ", size_delta, ", ", is_long, ", ", execution_price, ", ", )
-        longboi = orderbook_contract.functions.createIncreaseOrder(path, amountIn, index_token,  min_out,  size_delta, index_token,  is_long, execution_price, triggerAboveThreshold,executionFee,    shouldWrap).buildTransaction({'chainId': '0xa4b1', 'nonce': nonce, 'value' : executionFee,'gasPrice': Web3.to_wei('1', 'gwei')})
+        longboi = orderbook_contract.functions.createIncreaseOrder(path, amountIn, index_token,  min_out,  size_delta, index_token,  is_long, execution_price, triggerAboveThreshold,executionFee,    shouldWrap).build_transaction({'chainId': '0xa4b1', 'nonce': nonce, 'value' : executionFee,'gasPrice': Web3.to_wei('1', 'gwei')})
         send_tx(private_key, orderbook_contract, longboi)
     elif (coin == "eth" and (collateral == "usdt" or collateral == "usdc")):
         index_token = Web3.to_checksum_address(weth.lower())
@@ -288,7 +288,7 @@ def limitLong(coin, collateral, leverage, amount_in, price):
         triggerAboveThreshold = False
         shouldWrap = False
         print(path, ", ",index_token, ", ",   ",", min_out, ", ", size_delta, ", ", is_long, ", ", execution_price, ", ", )
-        longboi = orderbook_contract.functions.createIncreaseOrder(path, amountIn, index_token,  min_out,  size_delta, index_token,  is_long, execution_price, triggerAboveThreshold,executionFee,    shouldWrap).buildTransaction({'chainId': '0xa4b1', 'nonce': nonce, 'value' : executionFee,'gasPrice': Web3.to_wei('1', 'gwei')})
+        longboi = orderbook_contract.functions.createIncreaseOrder(path, amountIn, index_token,  min_out,  size_delta, index_token,  is_long, execution_price, triggerAboveThreshold,executionFee,    shouldWrap).build_transaction({'chainId': '0xa4b1', 'nonce': nonce, 'value' : executionFee,'gasPrice': Web3.to_wei('1', 'gwei')})
         send_tx(private_key, orderbook_contract, longboi)
     elif (coin == "btc" and collateral == "btc"):
         index_token = Web3.to_checksum_address(btc.lower())
@@ -298,7 +298,7 @@ def limitLong(coin, collateral, leverage, amount_in, price):
         triggerAboveThreshold = False
         shouldWrap = False
         print(path, ", ",index_token, ", ",   ",", min_out, ", ", size_delta, ", ", is_long, ", ", execution_price, ", ", )
-        longboi = orderbook_contract.functions.createIncreaseOrder(path, amountIn, index_token,  min_out,  size_delta, index_token,  is_long, execution_price, triggerAboveThreshold,executionFee,    shouldWrap).buildTransaction({'chainId': '0xa4b1', 'nonce': nonce, 'value' : executionFee,'gasPrice': Web3.to_wei('1', 'gwei')})
+        longboi = orderbook_contract.functions.createIncreaseOrder(path, amountIn, index_token,  min_out,  size_delta, index_token,  is_long, execution_price, triggerAboveThreshold,executionFee,    shouldWrap).build_transaction({'chainId': '0xa4b1', 'nonce': nonce, 'value' : executionFee,'gasPrice': Web3.to_wei('1', 'gwei')})
         send_tx(private_key, orderbook_contract, longboi)
     elif (coin == "btc" and (collateral == "usdt" or collateral == "usdc")):
         index_token = Web3.to_checksum_address(btc.lower())
@@ -308,7 +308,7 @@ def limitLong(coin, collateral, leverage, amount_in, price):
         triggerAboveThreshold = False
         shouldWrap = False
         print(path, ", ",index_token, ", ",   ",", min_out, ", ", size_delta, ", ", is_long, ", ", execution_price, ", ", )
-        longboi = orderbook_contract.functions.createIncreaseOrder(path, amountIn, index_token,  min_out,  size_delta, index_token,  is_long, execution_price, triggerAboveThreshold, executionFee,    shouldWrap).buildTransaction({'chainId': '0xa4b1', 'nonce': nonce, 'value' : executionFee,'gasPrice': Web3.to_wei('1', 'gwei')})
+        longboi = orderbook_contract.functions.createIncreaseOrder(path, amountIn, index_token,  min_out,  size_delta, index_token,  is_long, execution_price, triggerAboveThreshold, executionFee,    shouldWrap).build_transaction({'chainId': '0xa4b1', 'nonce': nonce, 'value' : executionFee,'gasPrice': Web3.to_wei('1', 'gwei')})
         send_tx(private_key, orderbook_contract, longboi)
 
 
@@ -329,7 +329,7 @@ def limitShort(coin, collateral, leverage, amount_in, price):
         size_delta = Web3.to_wei(str(leverage * amount_in ), 'tether')
         execution_price = Web3.to_wei(str(price ), "tether")
         print(path, ", ",index_token, ", ",   ",", min_out, ", ", size_delta, ", ", is_long, ", ", execution_price, ", ", )
-        shortboi = orderbook_contract.functions.createIncreaseOrder(path,  amountIn, index_token, min_out,  size_delta,  index_token, is_long, execution_price, triggerAboveThreshold, executionFee, shouldWrap).buildTransaction({'chainId': '0xa4b1', 'nonce': nonce, 'value' : executionFee,'gasPrice': Web3.to_wei('1', 'gwei')})
+        shortboi = orderbook_contract.functions.createIncreaseOrder(path,  amountIn, index_token, min_out,  size_delta,  index_token, is_long, execution_price, triggerAboveThreshold, executionFee, shouldWrap).build_transaction({'chainId': '0xa4b1', 'nonce': nonce, 'value' : executionFee,'gasPrice': Web3.to_wei('1', 'gwei')})
         send_tx(private_key, gmx_position_router, shortboi)
     elif (coin == "eth"):
         index_token = Web3.to_checksum_address(weth.lower())
@@ -340,7 +340,7 @@ def limitShort(coin, collateral, leverage, amount_in, price):
         size_delta = Web3.to_wei(str(leverage * amount_in ), 'tether')
         execution_price = Web3.to_wei(str(price ), "tether")
         print(path, ", ",index_token, ", ",   ",", min_out, ", ", size_delta, ", ", is_long, ", ", execution_price, ", ", )
-        shortboi = orderbook_contract.functions.createIncreaseOrder(path,  amountIn, index_token,  min_out,  size_delta,  index_token, is_long, execution_price, triggerAboveThreshold, executionFee, shouldWrap).buildTransaction({'chainId': '0xa4b1', 'nonce': nonce, 'value' : executionFee,'gasPrice': Web3.to_wei('1', 'gwei')})
+        shortboi = orderbook_contract.functions.createIncreaseOrder(path,  amountIn, index_token,  min_out,  size_delta,  index_token, is_long, execution_price, triggerAboveThreshold, executionFee, shouldWrap).build_transaction({'chainId': '0xa4b1', 'nonce': nonce, 'value' : executionFee,'gasPrice': Web3.to_wei('1', 'gwei')})
         send_tx(private_key, gmx_position_router, shortboi)
 
 
@@ -355,60 +355,60 @@ def marketCloseLong(coin, collateral, qty, price, slippage):
     #Get size using coin/collateral -> close all for now
     size_delta = current_pos[0]
     if (size_delta > 1):
-        executionFee = Web3.toWei( 300000, "gwei")
+        executionFee = Web3.to_wei( 300000, "gwei")
         if (coin == "eth" and collateral == "weth"):
-            path = [Web3.toChecksumAddress(weth.lower())]
-            index_token = Web3.toChecksumAddress(weth.lower())
+            path = [Web3.to_checksum_address(weth.lower())]
+            index_token = Web3.to_checksum_address(weth.lower())
             min_out = 0
             collateral_delta = 0
             withdrawETH = False #gets weth
             print(path, ", ",index_token, ", ",   ",", collateral_delta, ", ", size_delta, ", ", is_long, ", ", execution_price, ", ", )
-            closeboi = position_router_contract.functions.createDecreasePosition(path, index_token, collateral_delta,  size_delta,  is_long, account.address, execution_price, min_out, executionFee, withdrawETH).buildTransaction({'chainId': '0xa4b1', 'nonce': nonce, 'value' : executionFee,'gasPrice': Web3.toWei('1', 'gwei')})
+            closeboi = position_router_contract.functions.createDecreasePosition(path, index_token, collateral_delta,  size_delta,  is_long, account.address, execution_price, min_out, executionFee, withdrawETH).build_transaction({'chainId': '0xa4b1', 'nonce': nonce, 'value' : executionFee,'gasPrice': Web3.to_wei('1', 'gwei')})
             send_tx(private_key, gmx_position_router, closeboi)
         elif (coin == "eth" and collateral == "eth"):
-            path = [Web3.toChecksumAddress(weth.lower())]
-            index_token = Web3.toChecksumAddress(weth.lower())
+            path = [Web3.to_checksum_address(weth.lower())]
+            index_token = Web3.to_checksum_address(weth.lower())
             min_out = 0
             collateral_delta = 0
             withdrawETH = True #gets weth
             print(path, ", ",index_token, ", ",   ",", collateral_delta, ", ", size_delta, ", ", is_long, ", ", execution_price, ", ", )
-            closeboi = position_router_contract.functions.createDecreasePosition(path, index_token, collateral_delta,  size_delta,  is_long, account.address, execution_price, min_out, executionFee, withdrawETH).buildTransaction({'chainId': '0xa4b1', 'nonce': nonce, 'value' : executionFee,'gasPrice': Web3.toWei('1', 'gwei')})
+            closeboi = position_router_contract.functions.createDecreasePosition(path, index_token, collateral_delta,  size_delta,  is_long, account.address, execution_price, min_out, executionFee, withdrawETH).build_transaction({'chainId': '0xa4b1', 'nonce': nonce, 'value' : executionFee,'gasPrice': Web3.to_wei('1', 'gwei')})
             send_tx(private_key, gmx_position_router, closeboi)
         elif (coin == "eth" and collateral == "usdt"):
-            path = [Web3.toChecksumAddress(usdt.lower())]
-            index_token = Web3.toChecksumAddress(weth.lower())
+            path = [Web3.to_checksum_address(usdt.lower())]
+            index_token = Web3.to_checksum_address(weth.lower())
             min_out = 0
             collateral_delta = 0
             withdrawETH = False #gets weth
             print(path, ", ",index_token, ", ",   ",", collateral_delta, ", ", size_delta, ", ", is_long, ", ", execution_price, ", ", )
-            closeboi = position_router_contract.functions.createDecreasePosition(path, index_token, collateral_delta,  size_delta,  is_long, account.address, execution_price, min_out, executionFee, withdrawETH).buildTransaction({'chainId': '0xa4b1', 'nonce': nonce, 'value' : executionFee,'gasPrice': Web3.toWei('1', 'gwei')})
+            closeboi = position_router_contract.functions.createDecreasePosition(path, index_token, collateral_delta,  size_delta,  is_long, account.address, execution_price, min_out, executionFee, withdrawETH).build_transaction({'chainId': '0xa4b1', 'nonce': nonce, 'value' : executionFee,'gasPrice': Web3.to_wei('1', 'gwei')})
             send_tx(private_key, gmx_position_router, closeboi)
         elif (coin == "eth" and collateral == "usdc"):
-            path = [Web3.toChecksumAddress(usdc.lower())]
-            index_token = Web3.toChecksumAddress(weth.lower())
+            path = [Web3.to_checksum_address(usdc.lower())]
+            index_token = Web3.to_checksum_address(weth.lower())
             min_out = 0
             collateral_delta = 0
             withdrawETH = False #gets weth
             print(path, ", ",index_token, ", ",   ",", collateral_delta, ", ", size_delta, ", ", is_long, ", ", execution_price, ", ", )
-            closeboi = position_router_contract.functions.createDecreasePosition(path, index_token, collateral_delta,  size_delta,  is_long, account.address, execution_price, min_out, executionFee, withdrawETH).buildTransaction({'chainId': '0xa4b1', 'nonce': nonce, 'value' : executionFee,'gasPrice': Web3.toWei('1', 'gwei')})
+            closeboi = position_router_contract.functions.createDecreasePosition(path, index_token, collateral_delta,  size_delta,  is_long, account.address, execution_price, min_out, executionFee, withdrawETH).build_transaction({'chainId': '0xa4b1', 'nonce': nonce, 'value' : executionFee,'gasPrice': Web3.to_wei('1', 'gwei')})
             send_tx(private_key, gmx_position_router, closeboi)
         elif (coin == "btc" and collateral == "btc"):
-            path = [Web3.toChecksumAddress(btc.lower())]
-            index_token = Web3.toChecksumAddress(btc.lower())
+            path = [Web3.to_checksum_address(btc.lower())]
+            index_token = Web3.to_checksum_address(btc.lower())
             min_out = 0
             collateral_delta = 0
             withdrawETH = False #no eth
             print(path, ", ",index_token, ", ",   ",", collateral_delta, ", ", size_delta, ", ", is_long, ", ", execution_price, ", ", )
-            closeboi = position_router_contract.functions.createDecreasePosition(path, index_token, collateral_delta,  size_delta,  is_long, account.address, execution_price, min_out, executionFee, withdrawETH).buildTransaction({'chainId': '0xa4b1', 'nonce': nonce, 'value' : executionFee,'gasPrice': Web3.toWei('1', 'gwei')})
+            closeboi = position_router_contract.functions.createDecreasePosition(path, index_token, collateral_delta,  size_delta,  is_long, account.address, execution_price, min_out, executionFee, withdrawETH).build_transaction({'chainId': '0xa4b1', 'nonce': nonce, 'value' : executionFee,'gasPrice': Web3.to_wei('1', 'gwei')})
             send_tx(private_key, gmx_position_router, closeboi)
         elif (coin == "btc" and collateral == "usdc"):
-            path = [Web3.toChecksumAddress(usdc.lower())]
-            index_token = Web3.toChecksumAddress(btc.lower())
+            path = [Web3.to_checksum_address(usdc.lower())]
+            index_token = Web3.to_checksum_address(btc.lower())
             min_out = 0
             collateral_delta = 0
             withdrawETH = False #no eth
             print(path, ", ",index_token, ", ",   ",", collateral_delta, ", ", size_delta, ", ", is_long, ", ", execution_price, ", ", )
-            closeboi = position_router_contract.functions.createDecreasePosition(path, index_token, collateral_delta,  size_delta,  is_long, account.address, execution_price, min_out, executionFee, withdrawETH).buildTransaction({'chainId': '0xa4b1', 'nonce': nonce, 'value' : executionFee,'gasPrice': Web3.toWei('1', 'gwei')})
+            closeboi = position_router_contract.functions.createDecreasePosition(path, index_token, collateral_delta,  size_delta,  is_long, account.address, execution_price, min_out, executionFee, withdrawETH).build_transaction({'chainId': '0xa4b1', 'nonce': nonce, 'value' : executionFee,'gasPrice': Web3.to_wei('1', 'gwei')})
             send_tx(private_key, gmx_position_router, closeboi)
 
 
@@ -428,42 +428,42 @@ def marketCloseShort(coin, collateral, qty, price, slippage):
     #Get size using coin/collateral -> close all for now
     size_delta = current_pos[0]
     if (size_delta > 1):
-        executionFee = Web3.toWei( 300000, "gwei")
+        executionFee = Web3.to_wei( 300000, "gwei")
         if (coin == "eth" and collateral == "usdt"):
-            path = [Web3.toChecksumAddress(usdt.lower())]
-            index_token = Web3.toChecksumAddress(weth.lower())
+            path = [Web3.to_checksum_address(usdt.lower())]
+            index_token = Web3.to_checksum_address(weth.lower())
             min_out = 0
             collateral_delta = 0
             withdrawETH = False #gets weth
             print(path, ", ",index_token, ", ",   ",", collateral_delta, ", ", size_delta, ", ", is_long, ", ", execution_price, ", ", )
-            closeboi = position_router_contract.functions.createDecreasePosition(path, index_token, collateral_delta,  size_delta,  is_long, account.address, execution_price, min_out, executionFee, withdrawETH).buildTransaction({'chainId': '0xa4b1', 'nonce': nonce, 'value' : executionFee,'gasPrice': Web3.toWei('1', 'gwei')})
+            closeboi = position_router_contract.functions.createDecreasePosition(path, index_token, collateral_delta,  size_delta,  is_long, account.address, execution_price, min_out, executionFee, withdrawETH).build_transaction({'chainId': '0xa4b1', 'nonce': nonce, 'value' : executionFee,'gasPrice': Web3.to_wei('1', 'gwei')})
             send_tx(private_key, gmx_position_router, closeboi)
         elif (coin == "eth" and collateral == "usdc"):
-            path = [Web3.toChecksumAddress(usdc.lower())]
-            index_token = Web3.toChecksumAddress(weth.lower())
+            path = [Web3.to_checksum_address(usdc.lower())]
+            index_token = Web3.to_checksum_address(weth.lower())
             min_out = 0
             collateral_delta = 0
             withdrawETH = False #gets weth
             print(path, ", ",index_token, ", ",   ",", collateral_delta, ", ", size_delta, ", ", is_long, ", ", execution_price, ", ", )
-            closeboi = position_router_contract.functions.createDecreasePosition(path, index_token, collateral_delta,  size_delta,  is_long, account.address, execution_price, min_out, executionFee, withdrawETH).buildTransaction({'chainId': '0xa4b1', 'nonce': nonce, 'value' : executionFee,'gasPrice': Web3.toWei('1', 'gwei')})
+            closeboi = position_router_contract.functions.createDecreasePosition(path, index_token, collateral_delta,  size_delta,  is_long, account.address, execution_price, min_out, executionFee, withdrawETH).build_transaction({'chainId': '0xa4b1', 'nonce': nonce, 'value' : executionFee,'gasPrice': Web3.to_wei('1', 'gwei')})
             send_tx(private_key, gmx_position_router, closeboi)
         elif (coin == "btc" and collateral == "usdt"):
-            path = [Web3.toChecksumAddress(usdt.lower())]
-            index_token = Web3.toChecksumAddress(btc.lower())
+            path = [Web3.to_checksum_address(usdt.lower())]
+            index_token = Web3.to_checksum_address(btc.lower())
             min_out = 0
             collateral_delta = 0
             withdrawETH = False #no eth
             print(path, ", ",index_token, ", ",   ",", collateral_delta, ", ", size_delta, ", ", is_long, ", ", execution_price, ", ", )
-            closeboi = position_router_contract.functions.createDecreasePosition(path, index_token, collateral_delta,  size_delta,  is_long, account.address, execution_price, min_out, executionFee, withdrawETH).buildTransaction({'chainId': '0xa4b1', 'nonce': nonce, 'value' : executionFee,'gasPrice': Web3.toWei('1', 'gwei')})
+            closeboi = position_router_contract.functions.createDecreasePosition(path, index_token, collateral_delta,  size_delta,  is_long, account.address, execution_price, min_out, executionFee, withdrawETH).build_transaction({'chainId': '0xa4b1', 'nonce': nonce, 'value' : executionFee,'gasPrice': Web3.to_wei('1', 'gwei')})
             send_tx(private_key, gmx_position_router, closeboi)
         elif (coin == "btc" and collateral == "usdc"):
-            path = [Web3.toChecksumAddress(usdc.lower())]
-            index_token = Web3.toChecksumAddress(btc.lower())
+            path = [Web3.to_checksum_address(usdc.lower())]
+            index_token = Web3.to_checksum_address(btc.lower())
             min_out = 0
             collateral_delta = 0
             withdrawETH = False #no eth
             print(path, ", ",index_token, ", ",   ",", collateral_delta, ", ", size_delta, ", ", is_long, ", ", execution_price, ", ", )
-            closeboi = position_router_contract.functions.createDecreasePosition(path, index_token, collateral_delta,  size_delta,  is_long, account.address, execution_price, min_out, executionFee, withdrawETH).buildTransaction({'chainId': '0xa4b1', 'nonce': nonce, 'value' : executionFee,'gasPrice': Web3.toWei('1', 'gwei')})
+            closeboi = position_router_contract.functions.createDecreasePosition(path, index_token, collateral_delta,  size_delta,  is_long, account.address, execution_price, min_out, executionFee, withdrawETH).build_transaction({'chainId': '0xa4b1', 'nonce': nonce, 'value' : executionFee,'gasPrice': Web3.to_wei('1', 'gwei')})
             send_tx(private_key, gmx_position_router, closeboi)
 
 
